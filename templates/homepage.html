@@ -198,8 +198,8 @@
             }
         }
 
-        var tests = {{ tests|tojson }}
-        var tests2 = {{ tests2|tojson }}
+        /*var tests = double curly brackets tests|tojson }}
+        var tests2 = double curly brackets tests2|tojson }}
 
         function test()
         {
@@ -222,8 +222,8 @@
 
         window.onload = function WindowLoad(event)
         {
-            test();
-        }
+            test()
+        }*/
 
     </script>
 
@@ -234,8 +234,11 @@
      font-size: 450%; text-decoration: none; left: 30.5%; -webkit-text-stroke: 3px black;" href="">
         Pharmassistant
     </a>
-    <input id="searchbox" type="text" onsubmit="search(2)" placeholder=" Search for medicine..." class="searchbox" style="position: fixed;
+    <form onsubmit="search(2)">
+        <input id="searchbox" type="text" placeholder=" Search for medicine..." class="searchbox" style="position: fixed;
             top: 45%; left: 24%; width: 50%;">
+    </form>
+
 
     <a href=".." style="position: fixed; top: 0%; right: 0.5%; font-family: 'Ubuntu Light'; font-size: 130%; text-decoration: none; color: black;">
         Sign Out
@@ -246,9 +249,12 @@
 
         <p id="menu">Menu</p>
 
-        <input id="menusearch" type="text" onsubmit="search(1)" placeholder=" Search..." class="searchbox">
+        <form style="animation: inherit" onsubmit="search(1)">
+            <input id="menusearch" type="text" placeholder=" Search..." class="searchbox">
+        </form>
 
-        <button id="menuSearchSubmit" onclick="search(1)">
+
+        <button id="menuSearchSubmit" onclick="search(1)" style="animation: inherit">
             <img src="/static/Images/search.png" width="28" height="28">
         </button>
 
@@ -256,31 +262,31 @@
             Home
         </a>
 
-        <a id="option2" class="options" href="">
+        <a id="option2" class="options" href="/notifications">
             Notifications
         </a>
 
-        <a id="option3" class="options" href="">
+        <a id="option3" class="options" href="/medicines">
             Medicines
         </a>
 
-        <a id="option4" class="options" href="">
-            Place Orders
+        <a id="option4" class="options" href="/carePackages">
+            Care Packages
         </a>
 
-        <a id="option5" class="options" href="">
-            Track Orders
+        <a id="option5" class="options" href="/orders">
+            Orders
         </a>
 
-        <a id="option6" class="options" href="">
-            Sales & Expenses
+        <a id="option6" class="options" href="/makeReceipt">
+            Make Receipt
         </a>
 
-        <a id="option7" class="options" href="">
+        <a id="option7" class="options" href="/finances">
             Finances
         </a>
 
-        <a id="option8" class="options" href="">
+        <a id="option8" class="options" href="/accounts">
             Manage Accounts
         </a>
 
@@ -297,10 +303,6 @@
     <button id="submitSearch" class="submitButton" onclick="search(2)">
         Submit Search
     </button>
-
-    <div id="testbox" style="position: fixed; top: 60%; left: 25%; width: 30%; height: 30%;
-    border: 2px solid black; overflow: auto; white-space: pre-line; font-family: 'Ubuntu Light';
-    font-size: 150%;">
 
     </div>
 

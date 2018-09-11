@@ -9,22 +9,43 @@ def startupPage():
 
 @app.route('/home')
 def homepage():
-    tests = "napa"
-    tests2 = "ace"
-    return render_template('homepage.html', tests=tests, tests2=tests2)
+    return render_template('homepage.html')
 
 @app.route('/aboutUs')
 def aboutUsPage():
     return render_template('aboutUsPage.html')
 
+@app.route('/carePackages')
+def carePackagesPage():
+    return render_template('carePackages.html')
 
-@app.route('/medicines/napa')
-def napaPage():
-    return render_template('napa.html')
+@app.route('/finances')
+def financesPage():
+    return render_template('finances.html')
 
-@app.route('/medicines/ace')
-def acePage():
-    return render_template('ace.html')
+@app.route('/makeReceipt')
+def makeReceiptPage():
+    return render_template('makeReceipt.html')
+
+@app.route('/medicines')
+def medicinesPage():
+    return render_template('medicines.html')
+
+@app.route('/notifications')
+def notificationsPage():
+    return render_template('notificationsPage.html')
+
+@app.route('/orders')
+def ordersPage():
+    return render_template('orders.html')
+
+@app.route('/orders/placeOrder')
+def placeOrderPage():
+    return render_template('placeOrder.html')
+
+@app.route('/accounts')
+def accountsPage():
+    return render_template('accounts.html')
 
 
 if __name__ == '__main__':
