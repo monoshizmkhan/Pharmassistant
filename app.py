@@ -15,10 +15,6 @@ def homepage():
 def aboutUsPage():
     return render_template('aboutUsPage.html')
 
-@app.route('/carePackages')
-def carePackagesPage():
-    return render_template('carePackages.html')
-
 @app.route('/finances')
 def financesPage():
     return render_template('finances.html')
@@ -29,7 +25,12 @@ def makeReceiptPage():
 
 @app.route('/medicines')
 def medicinesPage():
-    return render_template('medicines.html')
+    medList=[None]*10000
+    a = "123Napa*Napa*Paracetamol*30*5*01-01-2020"
+    b = "456Ace*Ace*Paracetamol*40*3*01-01-2020"
+    medList[0]=a
+    medList[1]=b
+    return render_template('medicines.html', medList=medList)
 
 @app.route('/notifications')
 def notificationsPage():
@@ -46,6 +47,14 @@ def placeOrderPage():
 @app.route('/accounts')
 def accountsPage():
     return render_template('accounts.html')
+
+@app.route('/medicines/ace')
+def aPage():
+    return render_template('Ace.html')
+
+@app.route('/medicines/napa')
+def bPage():
+    return render_template('Napa.html')
 
 
 if __name__ == '__main__':
