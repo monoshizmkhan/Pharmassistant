@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Pharmassistant</title>
+    <title>Search Results</title>
     <style>
         .searchbox
         {
@@ -126,6 +126,23 @@
             100% { left: 0%; }
         }
 
+        ::-webkit-scrollbar
+        {
+            width: 1.1%;
+        }
+        ::-webkit-scrollbar-track
+        {
+            background: lightgray;
+        }
+        ::-webkit-scrollbar-thumb
+        {
+            background: black;
+        }
+        ::-webkit-scrollbar-thumb:hover
+        {
+            background: black;
+        }
+
 
     </style>
 
@@ -173,26 +190,13 @@
         }
 
         var query=""
-
-        function search(i)
+        function search()
         {
-            if(i==1)
-            {
-                if(document.getElementById("menusearch").value=="")alert("Enter keywords in searchbar before searching.")
-                else
-                {
-                    query=document.getElementById("menusearch").value;
-                    document.getElementById("menusearch").value="";
-                }
-            }
+            if(document.getElementById("menusearch").value=="")alert("Enter keywords in searchbar before searching.")
             else
             {
-                if(document.getElementById("searchbox").value=="")alert("Enter keywords in searchbar before searching.")
-                else
-                {
-                    query=document.getElementById("searchbox").value;
-                    document.getElementById("searchbox").value="";
-                }
+                query=document.getElementById("menusearch").value;
+                document.getElementById("menusearch").value="";
             }
             initiateSearch();
         }
@@ -207,21 +211,61 @@
             window.open("/searchResults");
         }
 
+        searched = {{ searched|tojson }}
+
+
+        searchResults = searched.split("*");
+
+        function showMeds()
+        {
+            //alert(searched);
+            if(searched=="No matches")
+            {
+                document.getElementById("listbox").appendChild(document.createTextNode("No Matches Found"));
+                return;
+            }
+            for(var i=0;i<searchResults.length;i++)
+            {
+                med = searchResults[i].split("#");
+                var a1 = document.createElement('div');
+                var linkText1 = document.createTextNode((i+1)+". "+med[1]+"\n");
+                a1.appendChild(linkText1);
+                a1.title = med[1];
+                a1.appendChild(document.createTextNode("ID: "+med[0]+"\n"));
+                a1.appendChild(document.createTextNode("type: "+med[2]+"\n"));
+                a1.appendChild(document.createTextNode("Price: $"+med[3]+"\n"));
+                a1.appendChild(document.createTextNode("Quantity: "+med[4]+"\n"));
+                a1.appendChild(document.createTextNode("Expiry Date: "+med[5]+"\n"));
+                a1.appendChild(document.createTextNode("Location: Shelf-"+med[5]+"\n\n"));
+                a1.style="color: black; text-decoration: none; font-family: 'Ubuntu'";
+                var a2 = document.createElement('img');
+                if(med[1]=="Ace") a2.src="/static/Images/ace.jpg";
+                else if(med[1]=="Napa")a2.src="/static/Images/napa.jpg";
+                else if(med[1]=="Bandages")a2.src="/static/Images/bandages.jpg";
+                else if(med[1]=="Orsaline")a2.src="/static/Images/orsaline.jpg";
+                a2.style="align-item: right; position: relative";
+                a2.height=200;
+                a2.width=200;
+                a2.style="position: absolute; right: 10%; top:"+(3+(i*50))+"%";
+                a2.appendChild(document.createTextNode("\n\n"));
+                a1.appendChild(a2);
+                document.getElementById("listbox").appendChild(a1);
+            }
+        }
+
+        window.onload = function WindowLoad(event)
+        {
+            showMeds();
+        }
+
+
+
+
     </script>
 
 </head>
 
 <body background="/static/Images/bg.jpg">
-    <a style="position: fixed; top: 28%; font-family: 'Ubuntu Light'; color: lightgrey;
-     font-size: 450%; text-decoration: none; left: 30.5%; -webkit-text-stroke: 3px black;" href="">
-        Pharmassistant
-    </a>
-    <form onsubmit="search(2)">
-        <input id="searchbox" type="text" placeholder=" Search for medicine..." class="searchbox" style="position: fixed;
-            top: 45%; left: 24%; width: 50%;">
-    </form>
-
-
     <a href=".." style="position: fixed; top: 0%; right: 0.5%; font-family: 'Ubuntu Light'; font-size: 130%; text-decoration: none; color: black;">
         Sign Out
     </a>
@@ -231,16 +275,16 @@
 
         <p id="menu">Menu</p>
 
-        <form style="animation: inherit" onsubmit="search(1)">
+        <form style="animation: inherit" onsubmit="search()">
             <input id="menusearch" type="text" placeholder=" Search..." class="searchbox">
         </form>
 
 
-        <button id="menuSearchSubmit" onclick="search(1)" style="animation: inherit">
+        <button id="menuSearchSubmit" onclick="search()" style="animation: inherit;">
             <img src="/static/Images/search.png" width="28" height="28">
         </button>
 
-        <a id="option1" class="options" href="">
+        <a id="option1" class="options" href="/home">
             Home
         </a>
 
@@ -248,7 +292,7 @@
             Notifications
         </a>
 
-        <a id="option3" class="options" href="/medicines">
+        <a id="option3" class="options" href="">
             Medicines
         </a>
 
@@ -278,10 +322,14 @@
         <img id="clps" src="/static/Images/collapsible.png" height="45" width="45">
     </button>
 
-    <button id="submitSearch" class="submitButton" onclick="search(2)">
-        Submit Search
-    </button>
+    </div>
 
+    <p style="position: fixed; top: -6%; left: 38.3%; font-family: 'Ubuntu Light'; font-size: 400%; color: white; -webkit-text-stroke: 3px black">
+        Medicines
+    </p>
+
+    <div id="listbox" style="white-space: pre-line; position: fixed; top: 20%; left: 17%;
+     height: 80%; width: 80%; font-size: 150%; font-family: 'Ubuntu Light'; overflow: auto">
     </div>
 
 </body>

@@ -129,6 +129,7 @@
 
     </style>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script type="text/javascript">
         var counter=0;
         function collapse()
@@ -171,19 +172,32 @@
             }
         }
 
+        var query=""
         function search()
         {
-            var searchKey="";
-            if(document.getElementById("menusearch").value=="")alert("Enter keywords in searchbar before searching.");
-            searchKey=document.getElementById("menusearch").value;
-            document.getElementById("menusearch").value="";
-            window.open("http://google.com/search?q="+searchKey);
+            if(document.getElementById("menusearch").value=="")alert("Enter keywords in searchbar before searching.")
+            else
+            {
+                query=document.getElementById("menusearch").value;
+                document.getElementById("menusearch").value="";
+            }
+            initiateSearch();
+        }
+
+        function initiateSearch()
+        {
+            searchKey = [{"queried": ""+query}];
+            var temp = JSON.stringify(searchKey)
+            //alert(temp)
+            $.post("/searchHandler", temp, function(){});
+            //event.preventDefault();
+            window.open("/searchResults");
         }
     </script>
 
 </head>
 
-<body bgcolor="#f8f8ff">
+<body background="/static/Images/bg.jpg">
     <a href=".." style="position: fixed; top: 0%; right: 0.5%; font-family: 'Ubuntu Light'; font-size: 130%; text-decoration: none; color: black;">
         Sign Out
     </a>
@@ -193,7 +207,7 @@
 
         <p id="menu">Menu</p>
 
-        <form style="animation: inherit" onsubmit="search(1)">
+        <form style="animation: inherit" onsubmit="search()">
             <input id="menusearch" type="text" placeholder=" Search..." class="searchbox">
         </form>
 

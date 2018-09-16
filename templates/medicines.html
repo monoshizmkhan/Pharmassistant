@@ -126,9 +126,27 @@
             100% { left: 0%; }
         }
 
+        ::-webkit-scrollbar
+        {
+            width: 1.1%;
+        }
+        ::-webkit-scrollbar-track
+        {
+            background: lightgray;
+        }
+        ::-webkit-scrollbar-thumb
+        {
+            background: black;
+        }
+        ::-webkit-scrollbar-thumb:hover
+        {
+            background: black;
+        }
+
 
     </style>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script type="text/javascript">
         var counter=0;
         function collapse()
@@ -171,49 +189,81 @@
             }
         }
 
-        function search()
+        var query=""
+
+        function search(i)
         {
-            var searchKey="";
-            if(document.getElementById("menusearch").value=="")alert("Enter keywords in searchbar before searching.");
-            searchKey=document.getElementById("menusearch").value;
-            document.getElementById("menusearch").value="";
-            window.open("http://google.com/search?q="+searchKey);
+            if(i==1)
+            {
+                if(document.getElementById("menusearch").value=="")alert("Enter keywords in searchbar before searching.")
+                else
+                {
+                    query=document.getElementById("menusearch").value;
+                    document.getElementById("menusearch").value="";
+                }
+            }
+            else
+            {
+                if(document.getElementById("searchbox").value=="")alert("Enter keywords in searchbar before searching.")
+                else
+                {
+                    query=document.getElementById("searchbox").value;
+                    document.getElementById("searchbox").value="";
+                }
+            }
+            initiateSearch();
+        }
+
+        function initiateSearch()
+        {
+            searchKey = [{"queried": ""+query}];
+            var temp = JSON.stringify(searchKey)
+            //alert(temp)
+            $.post("/searchHandler", temp, function(){});
+            //event.preventDefault();
+            window.open("/searchResults");
         }
 
         medList = {{ medList|tojson }}
-
 
         function showMeds()
         {
             for(var i=0;i<medList.length;i++)
             {
-                med = medList[i].split("*");
-                var a1 = document.createElement('a');
+                med = medList[i].split("#");
+                var a1 = document.createElement('div');
                 var linkText1 = document.createTextNode((i+1)+". "+med[1]+"\n");
                 a1.appendChild(linkText1);
                 a1.title = med[1];
-                a1.href = "/medicines/"+(med[1]).toLowerCase();
                 a1.appendChild(document.createTextNode("ID: "+med[0]+"\n"));
                 a1.appendChild(document.createTextNode("type: "+med[2]+"\n"));
-                a1.appendChild(document.createTextNode("Quantity: "+med[3]+"\n"));
-                a1.appendChild(document.createTextNode("Price: $"+med[4]+"\n"));
-                a1.appendChild(document.createTextNode("Expiry Date: "+med[5]+"\n\n"));
+                a1.appendChild(document.createTextNode("Price: $"+med[3]+"\n"));
+                a1.appendChild(document.createTextNode("Quantity: "+med[4]+"\n"));
+                a1.appendChild(document.createTextNode("Expiry Date: "+med[5]+"\n"));
+                a1.appendChild(document.createTextNode("Location: Shelf-"+med[6]+"\n\n"));
                 a1.style="color: black; text-decoration: none; font-family: 'Ubuntu'";
+                var a2 = document.createElement('img');
+                a2.src=med[7];
+                a2.height=180;
+                a2.width=200;
+                a2.style="position: absolute; right: 10%; top:"+(3+(i*58))+"%";
+                a2.appendChild(document.createTextNode("\n\n"));
+                a1.appendChild(a2);
                 document.getElementById("listbox").appendChild(a1);
             }
         }
-
 
         window.onload = function WindowLoad(event)
         {
             showMeds();
         }
 
+        var searchKey = "";
     </script>
 
 </head>
 
-<body bgcolor="#f8f8ff">
+<body background="/static/Images/bg.jpg">
     <a href=".." style="position: fixed; top: 0%; right: 0.5%; font-family: 'Ubuntu Light'; font-size: 130%; text-decoration: none; color: black;">
         Sign Out
     </a>
@@ -228,7 +278,7 @@
         </form>
 
 
-        <button id="menuSearchSubmit" onclick="search()" style="animation: inherit">
+        <button id="menuSearchSubmit" onclick="search(1)" style="animation: inherit;">
             <img src="/static/Images/search.png" width="28" height="28">
         </button>
 
@@ -272,12 +322,22 @@
 
     </div>
 
-    <p style="position: fixed; top: -6%; left: 38.3%; font-family: 'Ubuntu Light'; font-size: 400%; color: white; -webkit-text-stroke: 3px black">
+    <p style="position: fixed; top: -8%; left: 38.3%; font-family: 'Ubuntu Light'; font-size: 400%; color: white; -webkit-text-stroke: 3px black">
         Medicines
     </p>
 
 
-    <div id="listbox" style="white-space: pre-line; position: fixed; top: 18%; left: 17%; height: 80%; width: 80%; font-size: 100%; font-family: 'Ubuntu Light'; overflow: auto">
+    <input id="searchbox" style="position:fixed; top: 15%; left: 30%; width: 39%; height: 5%; font-family: 'Ubuntu Light';
+                                font-size: 100%; border: 2px solid black; border-radius: 2px" placeholder=" Search for a medicine...">
+
+    <button id="menuSearchSubmit" onclick="search(2)" style="position: fixed; top: 15.2%; left: 66%;
+                                                    background: transparent; border-color: transparent; outline: none">
+            <img src="/static/Images/search.png" width="28" height="28">
+        </button>
+
+
+    <div id="listbox" style="white-space: pre-line; position: fixed; top: 24%; left: 17%;
+     height: 70%; width: 80%; font-size: 150%; font-family: 'Ubuntu Light'; overflow: auto">
     </div>
 
 </body>
