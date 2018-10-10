@@ -181,8 +181,8 @@
             {
                 query=document.getElementById("menusearch").value;
                 document.getElementById("menusearch").value="";
+                initiateSearch();
             }
-            initiateSearch();
         }
 
         function initiateSearch()
@@ -259,7 +259,9 @@
         function finalize()
         {
             document.getElementById("receipt").appendChild(document.createTextNode("_____________________________\n"));
-            document.getElementById("receipt").appendChild(document.createTextNode("Total cost = $"+totalCost+"\n"));
+            document.getElementById("receipt").appendChild(document.createTextNode("Total cost = $"+totalCost+"\n\n"));
+            var employeeName="John"
+            document.getElementById("receipt").appendChild(document.createTextNode("Sold by: "+employeeName+"\n"));
         }
 
     </script>

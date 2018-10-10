@@ -13,11 +13,15 @@ class Iterator(ABC):
         pass
 
     @abstractmethod
-    def add(self, toAdd):
+    def add(self, toAdd, quantity):
         pass
 
     @abstractmethod
-    def remove(self, toRemove):
+    def remove(self, toRemove, quantity):
+        pass
+
+    @abstractmethod
+    def update(self, medName, attribute, newValue):
         pass
 
     @abstractmethod

@@ -197,8 +197,8 @@
             {
                 query=document.getElementById("menusearch").value;
                 document.getElementById("menusearch").value="";
+                initiateSearch();
             }
-            initiateSearch();
         }
 
         function initiateSearch()
@@ -219,7 +219,7 @@
         function showMeds()
         {
             //alert(searched);
-            if(searched=="No matches")
+            if(searched.toString().toUpperCase()=="No matches".toUpperCase())
             {
                 document.getElementById("listbox").appendChild(document.createTextNode("No Matches Found"));
                 return;
@@ -255,6 +255,7 @@
 
         window.onload = function WindowLoad(event)
         {
+            alert(searched)
             showMeds();
         }
 

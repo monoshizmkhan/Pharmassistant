@@ -21,14 +21,14 @@
         .submitButton
         {
             position:fixed;
-            top:53%;
-            left: 44%;
+            top: 15%;
+            right: 4%;
             width: 10%;
-            height: 5%;
+            height: 6%;
             background: white;
             border: solid black;
             border-width: 1.5px;
-            border-radius: 5px;
+            border-radius: 2px;
             font-family: "Ubuntu Light";
             color: black;
             font-size: 100%;
@@ -37,14 +37,14 @@
         .submitButton:hover
         {
             position:fixed;
-            top:53%;
-            left: 44%;
+            top: 15%;
+            right: 4%;
             width: 10%;
-            height: 5%;
+            height: 6%;
             background: black;
             border: solid white;
             border-width: 1.5px;
-            border-radius: 5px;
+            border-radius: 2px;
             font-family: "Ubuntu Light";
             color: white;
             font-size: 100%;
@@ -200,6 +200,7 @@
                 {
                     query=document.getElementById("menusearch").value;
                     document.getElementById("menusearch").value="";
+                    initiateSearch();
                 }
             }
             else
@@ -209,9 +210,9 @@
                 {
                     query=document.getElementById("searchbox").value;
                     document.getElementById("searchbox").value="";
+                    initiateSearch();
                 }
             }
-            initiateSearch();
         }
 
         function initiateSearch()
@@ -246,7 +247,7 @@
                 a2.src=med[7];
                 a2.height=180;
                 a2.width=200;
-                a2.style="position: absolute; right: 10%; top:"+(3+(i*58))+"%";
+                a2.style="position: absolute; right: 10%; top:"+(3+(i*53))+"%";
                 a2.appendChild(document.createTextNode("\n\n"));
                 a1.appendChild(a2);
                 document.getElementById("listbox").appendChild(a1);
@@ -322,7 +323,7 @@
 
     </div>
 
-    <p style="position: fixed; top: -8%; left: 38.3%; font-family: 'Ubuntu Light'; font-size: 400%; color: white; -webkit-text-stroke: 3px black">
+    <p style="position: fixed; top: -9%; left: 38.3%; font-family: 'Ubuntu Light'; font-size: 400%; color: white; -webkit-text-stroke: 3px black">
         Medicines
     </p>
 
@@ -334,6 +335,10 @@
                                                     background: transparent; border-color: transparent; outline: none">
             <img src="/static/Images/search.png" width="28" height="28">
         </button>
+
+    <button class="submitButton" onclick="window.location='/makeReceipt'">
+        Sell Medicine
+    </button>
 
 
     <div id="listbox" style="white-space: pre-line; position: fixed; top: 24%; left: 17%;

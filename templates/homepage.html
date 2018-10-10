@@ -183,6 +183,7 @@
                 {
                     query=document.getElementById("menusearch").value;
                     document.getElementById("menusearch").value="";
+                    initiateSearch();
                 }
             }
             else
@@ -192,9 +193,9 @@
                 {
                     query=document.getElementById("searchbox").value;
                     document.getElementById("searchbox").value="";
+                    initiateSearch();
                 }
             }
-            initiateSearch();
         }
 
         function initiateSearch()
@@ -205,6 +206,17 @@
             $.post("/searchHandler", temp, function(){});
             //event.preventDefault();
             window.open("/searchResults");
+        }
+
+        usr = {{ usr|tojson }}
+        window.onload = function WindowLoad(event)
+        {
+            if(usr=="NOUSER")
+            {
+                alert("Please sign in first.");
+                location.assign("/");
+            }
+            //alert("Current User: "+usr);
         }
 
     </script>
