@@ -193,6 +193,27 @@
             //event.preventDefault();
             window.open("/searchResults");
         }
+
+
+        currentUser = {{ currentUser|tojson }}
+        currentUserType = {{ currentUserType|tojson }}
+
+        var username, password, type;
+
+        window.onload = function WindowLoad(event)
+        {
+            var temp = currentUser.split("*");
+            username=temp[0];
+            password=temp[1];
+            type=currentUserType;
+            if(type!="admin")
+            {
+                alert("You need admin privileges to access accounts information.");
+                window.history.back();
+            }
+        }
+
+
     </script>
 
 </head>
