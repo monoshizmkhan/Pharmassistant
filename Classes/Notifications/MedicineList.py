@@ -1,6 +1,7 @@
 #from Classes.Notifications.Observable import Observable
 from Classes.Models.medicine import Medicine
-import json
+from Classes.DatabaseAccessors import AccessDatabaseMedicines as adm
+from Classes.Utilities import Iterator
 import datetime
 
 
@@ -13,16 +14,29 @@ class MedicineList(object):
 
     def createMedList(self):
 
-        medicines = [] #list of objects, will be collected from database
-        m1 = Medicine("Para01", "Napa", "Paracetamol", "0", "20", "01-01-2020", "22C", "/static/Images/napa.jpg")
-        m2 = Medicine("Para02", "Ace", "Paracetamol", "6", "15", "01-01-2018", "22D", "/static/Images/ace.jpg")
-        m3 = Medicine("Util01", "Bandages", "Utilities", "2", "50", "01-01-2020", "12B", "/static/Images/bandages.jpg")
-        m4 = Medicine("Saline01", "Orsaline", "Saline", "0", "50", "01-01-2020", "11A", "/static/Images/orslaine.jpg")
+        # medFromDatabase = [ "Saline01#Orsaline#Saline#1#50#01-07-2019#11A#/static/Images/orsaline.jpg",
+        #                       "Util01#Bandages#Utilities#2#50#01-01-2020#12B#/static/Images/bandages.jpg"]
+        medFromDatabase = []
+        a = adm.AccessDatabaseMedicines().getIterator()
+        while a.hasNext():
+            medFromDatabase.append(a.next())
 
-        medicines.append(m1)
-        medicines.append(m2)
-        medicines.append(m3)
-        medicines.append(m4)
+        m = []
+        for med in medFromDatabase:
+            medAttrs = med.split("#")
+            # __init__(self,medID,name,type,qty,price,expDate,shelf,imgLink):
+            medicine = Medicine(medAttrs[0],medAttrs[1],medAttrs[2],medAttrs[3],
+                                medAttrs[4],medAttrs[5],medAttrs[6],medAttrs[7],medAttrs[8])
+            m.append(medicine)
+
+        #extra medicines for testing
+        m.append(Medicine("Zim01", "Zimax", "Antibiotic","Beximco Pharma Limited", "0", "20", "01-01-2020", "31E", "/static/Images/napa.jpg"))
+        m.append(Medicine("Ant01", "Antacid", "Antacid","Square Pharma Limited", "10", "20", "01-01-2018", "23A", "/static/Images/ace.jpg"))
+        m.append(Medicine("Omid01", "Omidon", "Dompiridon","Square Pharma Limited", "0", "20", "01-01-2018", "22C", "/static/Images/napa.jpg"))
+
+        medicines = []
+        for mi in m:
+            medicines.append(mi)
 
         return medicines
 
@@ -55,8 +69,10 @@ class MedicineList(object):
         return notifications
 
 
-# m = MedicineList()
-# m.printList()
+
+m = MedicineList()
+for item in m.medicines:
+    print(item.__str__())
 # print(m.sendCountNotifications())
 # print("Expired: ")
 # print(m.sendExpiryNotifications())
