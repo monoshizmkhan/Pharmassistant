@@ -13,11 +13,11 @@ class Iterator(ABC):
         pass
 
     @abstractmethod
-    def add(self, toAdd, quantity):
+    def add(self, toAdd):
         pass
 
     @abstractmethod
-    def remove(self, toRemove, quantity):
+    def remove(self, toRemove):
         pass
 
     @abstractmethod

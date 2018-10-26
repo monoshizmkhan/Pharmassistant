@@ -21,14 +21,14 @@
         .submitButton
         {
             position:fixed;
-            top:53%;
-            left: 44%;
+            top: 15%;
+            right: 4%;
             width: 10%;
-            height: 5%;
+            height: 6%;
             background: white;
             border: solid black;
             border-width: 1.5px;
-            border-radius: 5px;
+            border-radius: 2px;
             font-family: "Ubuntu Light";
             color: black;
             font-size: 100%;
@@ -37,14 +37,14 @@
         .submitButton:hover
         {
             position:fixed;
-            top:53%;
-            left: 44%;
+            top: 15%;
+            right: 4%;
             width: 10%;
-            height: 5%;
+            height: 6%;
             background: black;
             border: solid white;
             border-width: 1.5px;
-            border-radius: 5px;
+            border-radius: 2px;
             font-family: "Ubuntu Light";
             color: white;
             font-size: 100%;
@@ -224,29 +224,27 @@
                 document.getElementById("listbox").appendChild(document.createTextNode("No Matches Found"));
                 return;
             }
-            for(var i=0;i<searchResults.length;i++)
+            for(var i=0;i<searchResults.length-1;i++)
             {
+                //alert(searchResults[i]);
                 med = searchResults[i].split("#");
                 var a1 = document.createElement('div');
                 var linkText1 = document.createTextNode((i+1)+". "+med[1]+"\n");
                 a1.appendChild(linkText1);
                 a1.title = med[1];
                 a1.appendChild(document.createTextNode("ID: "+med[0]+"\n"));
-                a1.appendChild(document.createTextNode("type: "+med[2]+"\n"));
-                a1.appendChild(document.createTextNode("Price: $"+med[3]+"\n"));
-                a1.appendChild(document.createTextNode("Quantity: "+med[4]+"\n"));
-                a1.appendChild(document.createTextNode("Expiry Date: "+med[5]+"\n"));
-                a1.appendChild(document.createTextNode("Location: Shelf-"+med[5]+"\n\n"));
+                a1.appendChild(document.createTextNode("Type: "+med[2]+"\n"));
+                a1.appendChild(document.createTextNode("Brand: "+med[3]+"\n"));
+                a1.appendChild(document.createTextNode("Price: $"+med[4]+"\n"));
+                a1.appendChild(document.createTextNode("Quantity: "+med[5]+"\n"));
+                a1.appendChild(document.createTextNode("Expiry Date: "+med[6]+"\n"));
+                a1.appendChild(document.createTextNode("Location: Shelf-"+med[7]+"\n\n"));
                 a1.style="color: black; text-decoration: none; font-family: 'Ubuntu'";
                 var a2 = document.createElement('img');
-                if(med[1]=="Ace") a2.src="/static/Images/ace.jpg";
-                else if(med[1]=="Napa")a2.src="/static/Images/napa.jpg";
-                else if(med[1]=="Bandages")a2.src="/static/Images/bandages.jpg";
-                else if(med[1]=="Orsaline")a2.src="/static/Images/orsaline.jpg";
-                a2.style="align-item: right; position: relative";
-                a2.height=200;
+                a2.src=med[8];
+                a2.height=180;
                 a2.width=200;
-                a2.style="position: absolute; right: 10%; top:"+(3+(i*50))+"%";
+                a2.style="position: absolute; right: 10%; margin-top: -23%";
                 a2.appendChild(document.createTextNode("\n\n"));
                 a1.appendChild(a2);
                 document.getElementById("listbox").appendChild(a1);
@@ -255,7 +253,7 @@
 
         window.onload = function WindowLoad(event)
         {
-            alert(searched)
+            //alert(searchResults);
             showMeds();
         }
 
@@ -329,7 +327,15 @@
         Medicines
     </p>
 
-    <div id="listbox" style="white-space: pre-line; position: fixed; top: 20%; left: 17%;
+    <button class="submitButton" onclick="window.location='/makeReceipt'">
+        Sell Medicine
+    </button>
+
+    <button class="submitButton" style="right: 15%" onclick="window.location='/medicineListModify'">
+        Add/Remove
+    </button>
+
+    <div id="listbox" style="white-space: pre-line; position: fixed; top: 24%; left: 17%;
      height: 80%; width: 80%; font-size: 150%; font-family: 'Ubuntu Light'; overflow: auto">
     </div>
 

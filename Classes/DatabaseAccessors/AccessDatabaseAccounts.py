@@ -18,27 +18,25 @@ class AccessDatabaseAccounts(Container.Container):
             self.index=0
 
         def hasNext(self):
-            if self.index < Statics.medNames.__len__():
+            if self.index < Statics.userList.__len__():
                 return True
             else:
                 return False
 
         def next(self):
             if self.hasNext():
-                a = Statics.medNames.__getitem__(self.index)
+                a = Statics.userList.__getitem__(self.index)
                 self.index += 1
                 return a
             else:
                 self.index=0
 
-        def add(self, username, password):
-            temp=username
-            temp2=password
+        def add(self, toAdd):
+            temp=toAdd
             #pass temp to a database management class method
 
-        def remove(self, username, password):
-            temp=username
-            temp2=password
+        def remove(self, toBeRemove):
+            temp=toBeRemove
             #pass temp to a database management class method
 
         def update(self, username, attribute, newValue):

@@ -7,6 +7,14 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <style>
+            td:last-child{background-color: #FFF;color:#F00;cursor: pointer;
+                          font-weight: bold;text-decoration: underline}
+        </style>
+
+
+
     <title>Make New Receipt</title>
     <style>
         .searchbox
@@ -25,18 +33,33 @@
         {
             background: white;
             color: black;
-            text-align: center;
-            height: 8%;
-            width: 15%;
+            position:fixed;
+            top: 8%;
+            left: 45%;
+            font-family: Ubuntu;
+            font-size: 150%;
+            height: 5%;
+            width: 7%;
+            border: 2px solid black;
+            border-radius: 2px;
         }
+        .text-rotator span {
+            background-color:rgba(000,0,0,0);/*background color and opacity together*/
+            }
 
         .options:hover
         {
             background: black;
             color: white;
-            text-align: center;
-            height: 8%;
-            width: 15%;
+            position:fixed;
+            top: 8%;
+            left: 45%;
+            font-family: Ubuntu;
+            font-size: 150%;
+            height: 5%;
+            width: 7%;
+            border: 2px solid black;
+            border-radius: 2px;
         }
 
         .expand
@@ -72,7 +95,24 @@
             animation-duration: 0.5s;
             animation-name: collapseAnim;
         }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+            border: 1px solid #ddd;
+        }
 
+        th, td {
+            text-align: center;
+            padding: 0px;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #f2f2f2
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9
+        }
         @keyframes expandAnim
         {
             0% { left: -20%; }
@@ -128,11 +168,135 @@
 
 
 
+
+
     </style>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+
     <script type="text/javascript">
+
+var todaysDate="";
+
+      window.onload = function WindowLoad(event)
+        {
+            var date = new Date();
+             usr={{ usr|tojson }}
+                 cashier= "Cashier: "+usr;
+                 console.log(cashier);
+         document.getElementById("cashier").innerText=cashier+"";
+
+            document.getElementById("currentDate").innerText = "Date: "+date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear();
+            todaysDate=date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+        }
+
+        medNames = {{ medNames|tojson }}
+
+
+
+
+        $(document).ready(function() {
+	if(document.createElement("datalist").options) {
+		$("#search").on("input", function(e) {
+
+			var dataList = $("#searchresults");
+			dataList.empty();
+
+      let data = medNames;
+      data.forEach(d => {
+          var x = d.split("#");
+        dataList.append('<option>'+x[1]+'</option>');
+      });
+      console.log(dataList);
+		});
+	}
+})
+
+
+           var index,table = document.getElementById("my_table");
+         for(var i = 1; i < table.rows.length; i++)
+            {
+                table.rows[i].cells[3].onclick = function()
+                {
+
+                        var c = confirm("do you want to delete this row");
+                    if(c === true)
+                    {
+                        index = this.parentElement.rowIndex;
+                        table.deleteRow(index);
+                    }
+                };
+
+            }
+
+
+
+          function addHtmlTableRow() {
+
+
+             if(document.getElementById("search").value=="")
+             {
+                 alert("Please select a medicine first!");
+                 return;
+             }
+
+             med = document.getElementById("search").value;
+                    amount =document.getElementById("number").value;
+                    var unitprice=findUnitPrice(med);
+                    var available = checkEnoughAmount(med,amount);
+                    if (available!=-1)
+                    {
+                        alert("Unsufficient amount. Available amount of "+med+" is "+available);
+                        return;
+                    }
+               table = document.getElementById("my_table");
+              var newRow = table.insertRow(table.length),
+                    cell1 = newRow.insertCell(0),
+                    cell2 = newRow.insertCell(1),
+                    cell3 = newRow.insertCell(2),
+
+                    cell4 = newRow.insertCell(3),
+                    cell5 = newRow.insertCell(4);
+
+
+              var removeButton = document.createElement("input");
+
+
+          cell1.innerHTML = med;
+          cell2.innerHTML = amount;
+          cell3.innerHTML = unitprice;
+          cell4.innerHTML = amount*unitprice;
+          cell5.innerHTML= '<button type="button" class="btn btn-default btn-sm" style="font-size : 15px;padding: -20px"> <span class="glyphicon glyphicon-remove"></span> Remove </button>';
+            document.getElementById("search").value="";
+            document.getElementById("number").value=1;
+
+              setTotalCost();
+               if(document.getElementById("money_given").value!="") viewCash();
+
+            selectedRow();
+            }
+
+            function selectedRow()
+            {
+
+                for(var i = 1; i < table.rows.length; i++)
+                {
+                    table.rows[i].cells[4].onclick = function()
+                    {
+                      // get the selected row index
+                    index = this.parentElement.rowIndex;
+
+                        table.deleteRow(index);
+                        setTotalCost();
+                        if(document.getElementById("money_given").value!="") viewCash();
+
+                    };
+                }
+            }
+            selectedRow();
         var counter=0;
+
         function collapse()
         {
             counter++;
@@ -185,6 +349,27 @@
             }
         }
 
+        function checkEnoughAmount(med,amnt) {
+
+            for(var i=0;i<medNames.length;i++)
+            {
+
+                var x = medNames[i].split("#");
+                if(x[1]==med)
+                {
+                    if(parseFloat(x[5])<amnt)
+                    {
+                        return x[5];
+                    }
+                }
+            }
+
+            return -1;
+
+
+
+        }
+
         function initiateSearch()
         {
             searchKey = [{"queried": ""+query}];
@@ -195,74 +380,132 @@
             window.open("/searchResults");
         }
 
-        var isNameDone=false;
-
-        function addName()
+        function findUnitPrice(med)
         {
-            if(document.getElementById("customerName").value=="")
+
+            for(var i=0;i<medNames.length;i++)
             {
-                alert("Insert a name, please.");
-                return;
+                var x = medNames[i].split("#");
+                if(med==x[1])
+                {
+                    console.log(x[4]);
+                    return x[4];
+
+
+                }
             }
-            if(!isNameDone)
-            {
-                var name = document.getElementById("customerName").value;
-                var currentDate = new Date();
-                document.getElementById("receipt").appendChild(document.createTextNode("Customer Name: "+name+"\n"));
-                document.getElementById("receipt").appendChild(document.createTextNode("Date: "+currentDate.getDate()+"/"+(currentDate.getMonth()+1)+"/"+currentDate.getFullYear()+"\n"));
-                document.getElementById("receipt").appendChild(document.createTextNode("Time: "+currentDate.getHours()+":"+(currentDate.getMinutes())+":"+currentDate.getSeconds()+"\n\n"));
-                document.getElementById("customerName").value="";
-            }
-            else
-            {
-                alert("You've already inserted a name.");
-                document.getElementById("customerName").value="";
-            }
-            isNameDone=true;
+            return 0;
         }
+
+        var isNameDone=false;
 
         var totalCost=0;
 
-        function addMedicine(i)
+        function setTotalCost() {
+
+            var cost= new Array();
+            var totalTemp="";
+            var x = 0;
+            var sum=0;
+            $('#my_table tr').each(function(row, tr){
+
+               totalTemp= ""+$(tr).find('td:eq(3)').text();
+               var x = parseFloat(totalTemp);
+
+               cost[row]=x;
+               });
+                cost.shift();
+               for(var i=0;i<cost.length;i++)
+               {
+                    sum+=cost[i];
+
+               }
+               totalCost=sum;
+                var division_foot = document.getElementById("rcpt_foot");
+                division_foot.innerHTML='<h4 style="font-size: 160%"><b>Total cost : TK '+sum+'</b></h4>';
+
+
+
+
+        }
+        function viewCash()
         {
-            if(!isNameDone)
+            if(document.getElementById("money_given").value=="")
             {
-                alert("Please insert a name first.");
-                return;
+             alert("Please enter paid cash amount!");
+             return;
             }
-            var med = "";
-            var cost=0;
-            if(i==0)
-            {
-                med="Napa";
-                cost=15;
-            }
-            else if(i==1)
-            {
-                med="Ace";
-                cost=12;
-            }
-            else if(i==2)
-            {
-                med="Bandage";
-                cost=5;
-            }
-            else if(i==3)
-            {
-                med="Saline";
-                cost=3;
-            }
-            document.getElementById("receipt").appendChild(document.createTextNode(med+"(1), price $"+cost+" \n"));
-            totalCost+=cost;
+            var div = document.getElementById("rcpt_foot3");
+            div.innerHTML= '<h4 style = "font-weight: bold;font-size: 160%;">Cash change: TK '+ (parseFloat(document.getElementById("money_given").value)-totalCost)+'</h4>';
         }
 
+
+        var Key="";
         function finalize()
         {
-            document.getElementById("receipt").appendChild(document.createTextNode("_____________________________\n"));
-            document.getElementById("receipt").appendChild(document.createTextNode("Total cost = $"+totalCost+"\n\n"));
-            var employeeName="John"
-            document.getElementById("receipt").appendChild(document.createTextNode("Sold by: "+employeeName+"\n"));
+
+            var  TableData = new Array();
+            var cost= new Array();
+            var totalTemp="";
+
+
+            var x = 0;
+            console.log(todaysDate);
+
+           $('#my_table tr').each(function(row, tr){
+               var temp = ""+$(tr).find('td:eq(3)').text()+"*";
+               temp+= ""+todaysDate+"*";
+
+               temp+=""+$(tr).find('td:eq(0)').text()+"*";
+               temp+=""+usr+"*";
+               temp+=""+$(tr).find('td:eq(1)').text();
+               totalTemp= ""+$(tr).find('td:eq(3)').text();
+               var x = parseFloat(totalTemp);
+
+   TableData[row]=temp;
+   cost[row]=x;
+
+
+
+});
+
+            TableData.shift();
+            cost.shift();
+            var sum =0;
+
+              var test="";
+
+            for(var i=0;i<TableData.length;i++)
+            {
+              // console.log(TableData[i]);
+                sum+=cost[i];
+                if(i==TableData.length-1)
+                test+=""+TableData[i];
+                else
+                    test+=""+TableData[i]+"#";
+
+            }
+            // Key = [{"task": ""+test}];
+            // var temp = JSON.stringify(Key);
+            var mydata= test+"";
+            mydata=""+test.toString();
+            //console.log(sum);
+
+
+
+             $.post("/addreceipt", {"mydata": mydata})
+
+console.log(mydata);
+
+            setTotalCost();
+
+
+
+
+
+
         }
+
 
     </script>
 
@@ -328,28 +571,82 @@
     </div>
 
 
-    <div style="position: fixed; top: 4%; left: 18%; height: 90%; width: 65%; border: 3px solid black; border-radius: 2px; font-family: 'Ubuntu Light';">
-        <input id="customerName" type="text" style="position:fixed; top: 6%; left: 19%; width: 50%; height: 6%; border: 3px solid black; border-radius: 2px; font-size: 100%; font-family: 'Ubuntu Light'; font-size: 150%" placeholder=" Enter customer's name...">
-        <button onclick="addName()" style="position:fixed; top: 6.5%; left: 71%; width: 10%; height: 5%; border: 3px solid black; border-radius: 2px; font-size: 100%; font-family: 'Ubuntu Light'; background: white; color: black">Enter</button>
-        <div id="receipt" style="white-space: pre-line; position: fixed; top: 20%; left: 19%; height: 65%; width: 63%; border: 3px solid black; border-radius: 2px; font-family: 'Ubuntu Light'; background: white; color: black; font-size: 200%; overflow: auto"></div>
-        <button onclick="finalize()" style="position:fixed; top: 87%; left: 45%; width: 8%; height: 6%; border: 3px solid black; border-radius: 2px; font-size: 100%; font-family: 'Ubuntu Light'; background: white; color: black">Submit</button>
-        <div style="position: fixed; top: 13%; left: 19%;">
-            <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" id="menu1" type="button"
-                    data-toggle="dropdown" style="width: 135%; height: 5%; border: 3px solid black; border-radius: 2px;
-                     background: white; font-family: 'Ubuntu Light';
-                     font-size: 100%; color: black">Select Medicine
-            <span class="caret"></span>
-            </button>
-            <ul class="eachOption dropdown-menu" role="menu" aria-labelledby="menu1" style="color: black; background: white">
-              <li class="eachOption" role="presentation"><a role="menuitem" tabindex="-1" onclick="addMedicine(0)">Napa</a></li>
-                <li class="eachOption" role="presentation"><a role="menuitem" tabindex="0" onclick="addMedicine(1)">Ace</a></li>
-                <li class="eachOption" role="presentation"><a role="menuitem" tabindex="1" onclick="addMedicine(2)">Bandages</a></li>
-                <li class="eachOption" role="presentation"><a role="menuitem" tabindex="2" onclick="addMedicine(3)">Saline</a></li>
-            </ul>
-          </div>
+    <div style="position: fixed; top: 2%; left: 16%; height: 95%; width: 75%; border: 3px solid black; border-radius: 2px; font-family: 'Ubuntu Light';">
+
+
+        <div id="receipt" style="position: fixed; top: 15%; left: 17%; height: 55%; width: 73%; border: 2px solid black; border-radius: 2px; font-family: 'Ubuntu Light'; background: white; color: black; font-size: 180%; overflow: auto">
+
+            <table class="table table-hover" id="my_table" style="top: 15.5%">
+
+
+                <thead  class="thead-dark">
+                <tr>
+                    <th>Medicine</th>
+                    <th>Quantity</th>
+                    <th>Unit price</th>
+                    <th>Total price</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody id="frm">
+
+                </tbody>
+            </table>
+
+
+
+
         </div>
+        <button onclick="finalize()" style="position:fixed; top: 90.25%; left: 48%; width: 8%; height: 6%; border: 3px solid black; border-radius: 2px; font-size: 140%; font-family: 'Ubuntu Light'; background: white; color: black">Submit</button>
+
+
+
+
+        <div id="main" style="position:absolute;width:98%;margin:10px;height: 40px">
+            <div id="d1" style="width:60%;padding:5px;float: left;">
+
+                <input type="text" name="search" id="search" placeholder="Type Any Medicine" list="searchresults" autocomplete="off"
+                   style="position:fixed; top: 8%; left: 19%; font-family: Ubuntu; font-size: 170%;
+                    height: 5%; width: 17%; border: 2px solid black; border-radius: 2px">
+                    <datalist id="searchresults"></datalist>
+             <input id="number" type="number" min="1" value="1" style="position:fixed; top: 8%; left: 37%; font-family: Ubuntu; font-size: 170%;
+                    height: 5%; width: 7%; border: 2px solid black; border-radius: 2px">
+             <button id="addMed" onclick="addHtmlTableRow()" class="options">Add</button>
+            </div>
+            <div id="d2" style="width:40%;float: right;">
+                <p id="currentDate" align="right" style=" font-family: Ubuntu; font-size: 160%;font-weight: bold;padding-right: 10px"></p>
+                 <p id="cashier" align="right" style=" font-family: Ubuntu; font-size: 160%;font-weight: bold;padding-right: 10px"></p>
+
+
+            </div>
+        </div>
+
+        <div style="position: fixed;top:69.75%;padding-left: 10px;height: 20%;border: 3px solid black;width: 73% ;left:17% ;">
+            <div  style="width:60%;padding:5px;float: left;">
+                <div id="rcpt_foot">
+                    <h3  style = "font-size: 160%;font-weight: bold;">Total Cost: TK 0</h3>
+                </div>
+
+            </div>
+
+            <div  style="width:40%;float: right;padding-top: 13px">
+                <div>
+                    <h4 style="font-weight: bold;font-size: 160%;">Paid Cash</h4>
+                    <input id = "money_given" style="position: fixed;font-family: Ubuntu; padding:10px;font-weight: bold;font-size: 120%;top: 71%;right:18.5%;height: 5%; width: 13%; border: 2px solid black; border-radius: 2px" placeholder="Enter amount">
+                    <button id = "cash_enter" onclick="viewCash()" style=" width: 5%; height: 3.75%;position: fixed; border: 2px solid black; border-radius: 2px; font-size: 130%;top: 71.5%;right:13%; font-family: Ubuntu Light; background: dimgrey; color: white">Enter</button>
+                </div>
+                <br>
+                <div id="rcpt_foot3" >
+                    <h4 style="font-size: 160%"><b>Cash Change: TK 0</b></h4>
+
+            </div>
+
+            </div>
+
+        </div>
+
     </div>
+
 
 </body>
 </html>

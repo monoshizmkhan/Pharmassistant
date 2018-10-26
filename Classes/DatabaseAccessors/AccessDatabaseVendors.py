@@ -18,27 +18,25 @@ class AccessDatabaseVendors(Container.Container):
             self.index=0
 
         def hasNext(self):
-            if self.index < Statics.medNames.__len__():
+            if self.index < Statics.vendorList.__len__():
                 return True
             else:
                 return False
 
         def next(self):
             if self.hasNext():
-                a = Statics.medNames.__getitem__(self.index)
+                a = Statics.vendorList.__getitem__(self.index)
                 self.index += 1
                 return a
             else:
                 self.index=0
 
-        def add(self, toAdd, quantity):
+        def add(self, toAdd):
             temp=toAdd
-            temp2=quantity
             #pass temp to a database management class method
 
-        def remove(self, toBeRemove, quantity):
+        def remove(self, toBeRemove):
             temp=toBeRemove
-            temp2=quantity
             #pass temp to a database management class method
 
         def update(self, medName, attribute, newValue):
